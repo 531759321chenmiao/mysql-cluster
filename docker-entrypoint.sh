@@ -20,9 +20,9 @@ function register_service() {
     fi
 
     if [ $last_state -eq 1 ]; then
-      my_id=mysql-ro.${ENV_CLUSTER_NAMESPACE}.svc.cluster.local-$my_hostname
+      my_id=$my_hostname.mysql-ro.${ENV_CLUSTER_NAMESPACE}.svc.cluster.local
     else
-      my_id=mysql.${ENV_CLUSTER_NAMESPACE}.svc.cluster.local-$my_hostname
+      my_id=$my_hostname.mysql.${ENV_CLUSTER_NAMESPACE}.svc.cluster.local
     fi
 
     consul services deregister -id=$my_id
