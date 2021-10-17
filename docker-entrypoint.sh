@@ -26,12 +26,14 @@ function register_service() {
 
     consul services deregister -id=$my_id
     if [ $ro -eq 1 ]; then
-      my_name=mysql-ro.${ENV_CLUSTER_NAMESPACE}.svc.cluster.local
+      my_id_name=mysql-ro.${ENV_CLUSTER_NAMESPACE}.svc.cluster.local
+      my_name=mysql-ro.npool.top
     else
-      my_name=mysql.${ENV_CLUSTER_NAMESPACE}.svc.cluster.local
+      my_id_name=mysql.${ENV_CLUSTER_NAMESPACE}.svc.cluster.local
+      my_name=mysql.npool.top
     fi
 
-    my_id=$my_name-$my_hostname
+    my_id=$my_id_name-$my_hostname
     consul services register -address=$my_hostname -port=3306 -name=$my_name -id=$my_id
     if [ $? -eq 0 ]; then
       echo "Fail to register $my_name with address $my_hostname"
