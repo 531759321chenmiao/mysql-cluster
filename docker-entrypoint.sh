@@ -1,6 +1,7 @@
 #!/bin/bash
 
 my_hostname=`hostname`
+my_ip=`hostname -i`
 export CONSUL_HTTP_ADDR=${ENV_CONSUL_HOST}:${ENV_CONSUL_PORT}
 
 function register_service() {
@@ -33,8 +34,8 @@ function register_service() {
       my_name=mysql.npool.top
     fi
 
-    my_id=$my_id_name-$my_hostname
-    consul services register -address=$my_hostname.${ENV_CLUSTER_NAMESPACE}.svc.cluster.local -port=3306 -name=$my_name -id=$my_id
+    my_id=${my_hostname}.$my_id_name
+    consul services register -address=$my_ip -port=3306 -name=$my_name -id=$my_id
     if [ $? -eq 0 ]; then
       echo "Fail to register $my_name with address $my_hostname"
       sleep 2
