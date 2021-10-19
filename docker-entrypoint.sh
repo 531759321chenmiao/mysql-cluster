@@ -14,19 +14,19 @@ function register_service() {
       continue
     fi
 
-    if [ $last_state -eq $ro ]; then
+    if [ "x$last_state" == "x$ro" ]; then
       sleep 2
       continue
     fi
 
-    if [ $last_state -eq 1 ]; then
+    if [ "x$last_state" == "x1" ]; then
       my_id=$my_hostname.mysql-ro.${ENV_CLUSTER_NAMESPACE}.svc.cluster.local
     else
       my_id=$my_hostname.mysql.${ENV_CLUSTER_NAMESPACE}.svc.cluster.local
     fi
 
     consul services deregister -id=$my_id
-    if [ $ro -eq 1 ]; then
+    if [ "x$ro" == "x1" ]; then
       my_id_name=mysql-ro.${ENV_CLUSTER_NAMESPACE}.svc.cluster.local
       my_name=mysql-ro.npool.top
     else
