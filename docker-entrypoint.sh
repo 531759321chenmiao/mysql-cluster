@@ -36,7 +36,7 @@ function register_service() {
 
     my_id=${my_hostname}.$my_id_name
     consul services register -address=$my_ip -port=3306 -name=$my_name -id=$my_id
-    if [ $? -eq 0 ]; then
+    if [ ! $? -eq 0 ]; then
       echo "Fail to register $my_name with address $my_hostname"
       sleep 2
       continue
