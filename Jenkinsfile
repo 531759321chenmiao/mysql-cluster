@@ -19,7 +19,7 @@ pipeline {
       }
       steps {
         sh 'mkdir -p .docker-tmp; cp /usr/bin/consul .docker-tmp'
-        sh 'docker build -t entropypool/mysql:8 .'
+        sh 'docker build -t entropypool/mysql:5.7.35 .'
       }
     }
 
@@ -28,7 +28,7 @@ pipeline {
         expression { RELEASE_TARGET == 'true' }
       }
       steps {
-        sh 'docker push entropypool/mysql:8'
+        sh 'docker push entropypool/mysql:5.7.35'
       }
     }
 
