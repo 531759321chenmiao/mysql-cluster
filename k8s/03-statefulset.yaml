@@ -16,8 +16,8 @@ spec:
     spec:
       initContainers:
       - name: init-mysql
-        image: entropypool/mysql:5.7
-        # image: mysql:5.7
+        image: entropypool/mysql:5.7.35
+        # image: mysql:5.7.35
         imagePullPolicy: Always
         env:
         - name: ENV_ENVIRONMENT_TARGET
@@ -44,6 +44,8 @@ spec:
             secretKeyRef:
               name: mysql-password-secret
               key: rootpassword
+        - name: MYSQL_ROOT_HOST
+          value: "%"
         command:
         - bash
         - "-c"
@@ -60,7 +62,7 @@ spec:
             cp /mnt/config-map/master.cnf /mnt/conf.d/
           else
             cp /mnt/config-map/slave.cnf /mnt/conf.d/
-          fi          
+          fi
         volumeMounts:
         - name: conf
           mountPath: /mnt/conf.d
@@ -83,7 +85,7 @@ spec:
           # Clone data from previous peer.
           ncat --recv-only mysql-$(($ordinal-1)).mysql 3307 | xbstream -x -C /var/lib/mysql
           # Prepare the backup.
-          xtrabackup --prepare --target-dir=/var/lib/mysql          
+          xtrabackup --prepare --target-dir=/var/lib/mysql
         volumeMounts:
         - name: data
           mountPath: /var/lib/mysql
@@ -92,8 +94,8 @@ spec:
           mountPath: /etc/mysql/conf.d
       containers:
       - name: mysql
-        image: entropypool/mysql:5.7
-        # image: mysql:5.7
+        image: entropypool/mysql:5.7.35
+        # image: mysql:5.7.35
         imagePullPolicy: Always
         env:
         - name: ENV_ENVIRONMENT_TARGET
@@ -120,6 +122,8 @@ spec:
             secretKeyRef:
               name: mysql-password-secret
               key: rootpassword
+        - name: MYSQL_ROOT_HOST
+          value: "%"
         ports:
         - name: mysql
           containerPort: 3306
@@ -136,14 +140,17 @@ spec:
         livenessProbe:
           exec:
             command: ["mysqladmin", "ping"]
-          initialDelaySeconds: 30
+          initialDelaySeconds: 60
           periodSeconds: 10
           timeoutSeconds: 5
         readinessProbe:
           exec:
             # Check we can execute queries over TCP (skip-networking is off).
-            command: ["mysql", "-h", "127.0.0.1", "-uroot", "-e", "SELECT 1"]
-          initialDelaySeconds: 5
+            command:
+              - sh
+              - -c
+              - MYSQL_PWD=$MYSQL_ROOT_PASSWORD mysql -h 127.0.0.1 -uroot -e "SELECT 1"
+          initialDelaySeconds: 60
           periodSeconds: 2
           timeoutSeconds: 1
       - name: xtrabackup
@@ -152,6 +159,12 @@ spec:
         ports:
         - name: xtrabackup
           containerPort: 3307
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-password-secret
+              key: rootpassword
         command:
         - bash
         - "-c"
@@ -177,10 +190,10 @@ spec:
           # Check if we need to complete a clone by starting replication.
           if [[ -f change_master_to.sql.in ]]; then
             echo "Waiting for mysqld to be ready (accepting connections)"
-            until mysql -h 127.0.0.1 -uroot -e "SELECT 1"; do sleep 1; done
+            until MYSQL_PWD=$MYSQL_ROOT_PASSWORD mysql -h 127.0.0.1 -uroot -e "SELECT 1"; do sleep 1; done
 
             echo "Initializing replication from clone position"
-            mysql -h 127.0.0.1 \
+            MYSQL_PWD=$MYSQL_ROOT_PASSWORD mysql -h 127.0.0.1 \
                   -e "$(<change_master_to.sql.in), \
                           MASTER_HOST='mysql-0.mysql', \
                           MASTER_USER='root', \
