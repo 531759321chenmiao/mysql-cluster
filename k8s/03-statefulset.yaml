@@ -18,7 +18,7 @@ spec:
       - name: init-mysql
         image: entropypool/mysql:5.7.35
         # image: mysql:5.7.35
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         env:
         - name: ENV_ENVIRONMENT_TARGET
           valueFrom:
@@ -96,7 +96,7 @@ spec:
       - name: mysql
         image: entropypool/mysql:5.7.35
         # image: mysql:5.7.35
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         env:
         - name: ENV_ENVIRONMENT_TARGET
           valueFrom:
