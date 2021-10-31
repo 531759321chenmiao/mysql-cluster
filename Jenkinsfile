@@ -53,6 +53,8 @@ pipeline {
         sh 'rm .apollo-base-config -rf'
         sh 'git clone https://github.com/NpoolPlatform/apollo-base-config.git .apollo-base-config'
         sh 'cd .apollo-base-config; ./apollo-base-config.sh $APP_ID $TARGET_ENV mysql-npool-top'
+        sh 'cd .apollo-base-config; ./apollo-item-config.sh $APP_ID $TARGET_ENV mysql-npool-top username root'
+        sh 'cd .apollo-base-config; ./apollo-item-config.sh $APP_ID $TARGET_ENV mysql-npool-top password $MYSQL_ROOT_PASSWORD'
       }
     }
   }
