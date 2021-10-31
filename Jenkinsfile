@@ -19,6 +19,15 @@ pipeline {
       }
       steps {
         sh 'mkdir -p .docker-tmp; cp /usr/bin/consul .docker-tmp'
+        sh(returnStdout: true, script: '''
+          set +e
+          docker images | grep entropypool | grep mysql:5.7.35
+          rc=$?
+          set -e
+          if [ 0 -eq $rc ]; then
+            docker rmi entropypool/mysql:5.7.35
+          fi
+        '''.stripIndent())
         sh 'docker build -t entropypool/mysql:5.7.35 .'
       }
     }
