@@ -44,7 +44,19 @@ pipeline {
         sh 'kubectl apply -k k8s'
       }
     }
+
+    stage('Config apollo') {
+      when {
+        expression { CONFIG_TARGET == 'true' }
+      }
+      steps {
+        sh 'rm .apollo-base-config -rf'
+        sh 'git clone https://github.com/NpoolPlatform/apollo-base-config.git .apollo-base-config'
+        sh 'cd .apollo-base-config; ./apollo-base-config.sh $APP_ID $TARGET_ENV mysql-npool-top'
+      }
+    }
   }
+
   post('Report') {
     fixed {
       script {
