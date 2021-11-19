@@ -34,7 +34,16 @@ pipeline {
         expression { RELEASE_TARGET == 'true' }
       }
       steps {
-        sh 'docker push entropypool/mysql:5.7.35'
+        sh(returnStdout: true, script: '''
+          set +e
+          while true; do
+            docker push entropypool/mysql:5.7.35
+            if [ $? -eq 0 ]; then
+              break
+            fi
+          done
+          set -e
+        '''.stripIndent())
       }
     }
 
