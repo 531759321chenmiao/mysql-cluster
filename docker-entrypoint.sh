@@ -8,11 +8,16 @@ function register_service() {
   last_state=-1
   while true; do
     ro=$(MYSQL_PWD=$MYSQL_ROOT_PASSWORD mysql -e "SELECT @@read_only;" | tail -n1)
-    if [ ! $? -eq 0 ]; then
-      echo "Wait for mysql daemon ready"
-      sleep 10
-      continue
-    fi
+
+    case $ro in
+      0 | 1)
+	;;
+      *)
+	echo "Invalid ro: ($ro)"
+        sleep 10
+        continue
+	;;
+    esac
 
     if [ "x$last_state" == "x$ro" ]; then
       sleep 2
