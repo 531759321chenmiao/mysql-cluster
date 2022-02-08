@@ -6,9 +6,22 @@ metadata:
   labels:
     app: mysql
 data:
+  my.cnf: |
+    [client]
+    default-character-set=utf8mb4
+    [mysql]
+    default-character-set=utf8mb4
   master.cnf: |
     [mysqld]
     log-bin
+    character-set-server = utf8mb4
+    collation-server = utf8mb4_unicode_ci
+    init_connect='SET NAMES utf8mb4'
+    skip-character-set-client-handshake = true
   slave.cnf: |
     [mysqld]
     super-read-only
+    character-set-server = utf8mb4
+    collation-server = utf8mb4_unicode_ci
+    init_connect='SET NAMES utf8mb4'
+    skip-character-set-client-handshake = true
