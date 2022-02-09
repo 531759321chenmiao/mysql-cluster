@@ -3,6 +3,8 @@ FROM mysql:5.7.35
 RUN mkdir -p /usr/local/bin
 RUN mv /usr/local/bin/docker-entrypoint.sh /usr/local/bin/docker-entrypoint-inner.sh
 
+RUN gpg --keyserver keyserver.ubuntu.com --recv 467B942D3A79BD29
+RUN gpg --export --armor5523BAEEB01FA116| sudo apt-key add -
 RUN apt-get update -y
 RUN apt-get install curl -y
 
