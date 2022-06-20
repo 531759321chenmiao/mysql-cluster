@@ -78,6 +78,20 @@ pipeline {
         sh 'cd .apollo-base-config; ./apollo-item-config.sh $APP_ID $TARGET_ENV mysql-npool-top password $MYSQL_ROOT_PASSWORD'
       }
     }
+
+    stage('Mysql exporter config') {
+      when {
+        expression { CONFIG_TARGET == 'true' }
+      }
+      steps {
+        sh 'PASSWORD=`kubectl get secret --namespace "kube-system" mysql-password-secret -o jsonpath="{.data.rootpassword}" | base64 --decode`'
+        sh 'MYSQL_EXPORTER_PASSWORD=$MYSQL_EXPORTER_PASSWORD envsubst < ./sql/mysql_exporter.sql > ./sql/mysql_exporter.sql'
+        sh 'kubectl exec -it -n kube-system   mysql-6d8fb55d66-5nxx7 -- mysql -uroot -p$PASSWORD -e "`cat ./sql/mysql_exporter.sql`" '
+        sh 'kubectl create secret generic mysql-exporter-password-secret --from-literal=password=$MYSQL_EXPORTER_PASSWORD -n monitor'
+
+      }
+    }
+
   }
 
   post('Report') {
