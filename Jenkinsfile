@@ -85,7 +85,7 @@ pipeline {
       }
       steps {
         sh (returnStdout: false, script: '''
-            MYSQL_EXPORTER_PASSWORD=$MYSQL_EXPORTER_PASSWORD envsubst < ./sql/base.sql > ./sql/base.sql
+            MYSQL_EXPORTER_PASSWORD=$MYSQL_EXPORTER_PASSWORD envsubst < sql/base.sql > sql/base.sql
             PASSWORD=`kubectl get secret --namespace "kube-system" mysql-password-secret -o jsonpath="{.data.rootpassword}" | base64 --decode`
             SQL=`cat ./sql/base.sql`
             kubectl exec -it -n kube-system mysql-0 -- mysql -uroot -p$PASSWORD -e "$SQL"
