@@ -78,6 +78,21 @@ pipeline {
         sh 'cd .apollo-base-config; ./apollo-item-config.sh $APP_ID $TARGET_ENV mysql-npool-top password $MYSQL_ROOT_PASSWORD'
       }
     }
+
+    stage('Execute base sql') {
+      when {
+        expression { EXECUTE_BASE_SQL_TARGET == 'true' }
+      }
+      steps {
+        sh (returnStdout: false, script: '''
+            export MYSQL_EXPORTER_PASSWORD=$MYSQL_EXPORTER_PASSWORD
+            PASSWORD=`kubectl get secret --namespace "kube-system" mysql-password-secret -o jsonpath="{.data.rootpassword}" | base64 --decode`
+            envsubst < ./sql/base.sql | kubectl exec -it -n kube-system mysql-0 -- mysql -uroot -p$PASSWORD
+            kubectl create secret generic mysql-exporter-password-secret --from-literal=password=$MYSQL_EXPORTER_PASSWORD -n monitor || echo "secret already exists"
+            '''.stripIndent())
+      }
+    }
+
   }
 
   post('Report') {
