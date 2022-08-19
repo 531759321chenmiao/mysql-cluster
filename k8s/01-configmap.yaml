@@ -13,6 +13,7 @@ data:
     default-character-set=utf8mb4
   master.cnf: |
     [mysqld]
+    max_connections = 2000
     log-bin
     character-set-server = utf8mb4
     collation-server = utf8mb4_unicode_ci
@@ -20,6 +21,7 @@ data:
     skip-character-set-client-handshake = true
   slave.cnf: |
     [mysqld]
+    max_connections = 2000
     super-read-only
     character-set-server = utf8mb4
     collation-server = utf8mb4_unicode_ci
