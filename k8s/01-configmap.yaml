@@ -27,7 +27,7 @@ data:
     binlog_cache_size = 4M
     max_binlog_cache_size = 2G
     max_binlog_size = 1G
-    expire_logs_days = 7
+    expire_logs_days = 0
 
     # performance setttings
     max_connections = 2000
@@ -67,7 +67,7 @@ data:
     binlog_cache_size = 4M
     max_binlog_cache_size = 2G
     max_binlog_size = 1G
-    expire_logs_days = 7
+    expire_logs_days = 0
 
     # performance setttings
     max_connections = 2000
