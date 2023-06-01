@@ -57,11 +57,12 @@ register_service &
 
 pmm-agent setup --config-file=/usr/local/percona/pmm2/config/pmm-agent.yaml --server-insecure-tls --server-address=monitoring-service:443 --server-username=admin --server-password=12345679 --force >> /var/log/pmm-agent.log
 pmm-agent run --config-file=/usr/local/percona/pmm2/config/pmm-agent.yaml --server-insecure-tls --server-address=monitoring-service:443 --server-username=admin --server-password=12345679 >> /var/log/pmm-agent.log 2>&1 &
+
 sleep 10
-pmm-admin status
+pmm-admin status >> /var/log/pmm-agent.log
 if [ $? -eq 0 ]; then
-  pmm-admin add mysql --query-source=slowlog --username=root --password=$MYSQL_ROOT_PASSWORD sl-$my_hostname
-  pmm-admin add mysql --query-source=perfschema --username=root --password=$MYSQL_ROOT_PASSWORD ps-$my_hostname
+  pmm-admin add mysql --query-source=slowlog --username=root --password=$MYSQL_ROOT_PASSWORD sl-$my_hostname >> /var/log/pmm-agent.log
+  pmm-admin add mysql --query-source=perfschema --username=root --password=$MYSQL_ROOT_PASSWORD ps-$my_hostname >> /var/log/pmm-agent.log
 fi
 
 /usr/local/bin/docker-entrypoint-inner.sh $@
