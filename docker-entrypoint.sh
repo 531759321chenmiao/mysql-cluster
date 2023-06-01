@@ -69,6 +69,7 @@ function pmm_admin_add_mysql() {
         sleep 10
         continue
       fi
+      break
     done
   fi
 }
