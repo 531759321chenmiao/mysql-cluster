@@ -11,9 +11,7 @@ RUN apt-get install debian-archive-keyring -y
 RUN apt-get update -y
 RUN apt --fix-broken install -y
 RUN apt-get update -y
-RUN apt-get install curl -y
-RUN apt-get install lsb-release -y
-RUN apt-get install apt-utils -y
+RUN apt-get install curl net-tools lsb-release apt-utils -y
 
 COPY percona-release_latest.generic_all.deb /usr/local/bin
 COPY percona-release_latest.buster_all.deb /usr/local/bin
@@ -26,6 +24,6 @@ RUN apt-get update -y
 RUN apt install percona-xtrabackup-24 -y
 RUN apt install qpress -y
 
-# COPY .docker-tmp/consul /usr/bin/consul
+COPY .docker-tmp/consul /usr/bin/consul
 COPY docker-entrypoint.sh /usr/local/bin
 RUN chmod a+x /usr/local/bin/docker-entrypoint.sh
