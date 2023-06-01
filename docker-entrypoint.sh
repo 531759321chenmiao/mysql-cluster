@@ -61,7 +61,7 @@ function pmm_admin_add_mysql() {
   pmm-admin status
   if [ $? -eq 0 ]; then
     while true; do
-      netstst -lntup | grep 3306
+      netstat -lntup | grep 3306
       if [ $? -eq 0 ]; then
         pmm-admin add mysql --query-source=slowlog --username=root --password=$MYSQL_ROOT_PASSWORD sl-$my_hostname
         pmm-admin add mysql --query-source=perfschema --username=root --password=$MYSQL_ROOT_PASSWORD ps-$my_hostname

@@ -13,12 +13,14 @@ RUN apt --fix-broken install -y
 RUN apt-get update -y
 RUN apt-get install curl net-tools lsb-release apt-utils -y
 
-COPY percona-release_latest.generic_all.deb /usr/local/bin
-COPY percona-release_latest.buster_all.deb /usr/local/bin
+# COPY percona-release_latest.generic_all.deb /usr/local/bin
+# COPY percona-release_latest.buster_all.deb /usr/local/bin
+RUN curl -o /usr/local/bin/percona-release_latest.generic_all.deb https://repo.percona.com/apt/percona-release_latest.generic_all.deb
+RUN curl -o /usr/local/bin/percona-release_latest.$(lsb_release -sc)_all.deb https://repo.percona.com/apt/percona-release_latest.$(lsb_release -sc)_all.deb
 RUN dpkg -i /usr/local/bin/percona-release_latest.generic_all.deb
 RUN apt-get update -y
 RUN apt-get install -y pmm2-client
-RUN dpkg -i /usr/local/bin/percona-release_latest.buster_all.deb
+RUN dpkg -i /usr/local/bin/percona-release_latest.$(lsb_release -sc)_all.deb
 RUN percona-release enable-only tools release
 RUN apt-get update -y
 RUN apt install percona-xtrabackup-24 -y
