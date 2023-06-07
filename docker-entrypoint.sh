@@ -58,14 +58,14 @@ function pmm_admin_add_mysql() {
     consul_pmm_service=`curl -s http://${CONSUL_HTTP_ADDR}/v1/agent/service/pmm.${ENV_CLUSTER_NAMESPACE}.svc.cluster.local`
     pmm_service=`echo $consul_pmm_service | jq '.Service' | awk -F '"' '{print $2}'`
     pmm_service_port=`echo $consul_pmm_service | jq '.Port'`
-    if [ $? -eq 0 ]; then
+    if [ "x$pmm_service_port" == "x443" ]; then
         echo "### pmm-agent setup --config-file=/usr/local/percona/pmm2/config/pmm-agent.yaml --server-insecure-tls --server-address=$pmm_service:$pmm_service_port --server-username=admin --server-password=$ENV_PMM_ADMIN_PASSWORD --force" >> /var/log/pmm-agent.log 2>&1
         pmm-agent setup --config-file=/usr/local/percona/pmm2/config/pmm-agent.yaml --server-insecure-tls --server-address=$pmm_service:$pmm_service_port --server-username=admin --server-password=$ENV_PMM_ADMIN_PASSWORD --force >> /var/log/pmm-agent.log 2>&1
         echo "### pmm-agent run --config-file=/usr/local/percona/pmm2/config/pmm-agent.yaml --server-insecure-tls --server-address=$pmm_service:$pmm_service_port --server-username=admin --server-password=$ENV_PMM_ADMIN_PASSWORD" >> /var/log/pmm-agent.log 2>&1
         pmm-agent run --config-file=/usr/local/percona/pmm2/config/pmm-agent.yaml --server-insecure-tls --server-address=$pmm_service:$pmm_service_port --server-username=admin --server-password=$ENV_PMM_ADMIN_PASSWORD >> /var/log/pmm-agent.log 2>&1 &
     else
-      echo "Fail to register $pmm_service"
-      sleep 5
+      echo "Pmm service unregistered"
+      sleep 10
       continue
     fi
     break
@@ -76,14 +76,18 @@ function pmm_admin_add_mysql() {
     while true; do
       netstat -lntup | grep 3306
       if [ $? -eq 0 ]; then
+	    echo "Run pmm admin add mysql"
         pmm-admin add mysql --query-source=slowlog --username=root --password=$MYSQL_ROOT_PASSWORD sl-$my_hostname
         pmm-admin add mysql --query-source=perfschema --username=root --password=$MYSQL_ROOT_PASSWORD ps-$my_hostname
       else
+	    echo "Mysql not running"
         sleep 10
         continue
       fi
       break
     done
+  else
+    echo "Pmm admin not running"
   fi
 }
 
