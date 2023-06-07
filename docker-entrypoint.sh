@@ -54,9 +54,20 @@ function register_service() {
 }
 
 function pmm_admin_add_mysql() {
-  pmm-agent setup --config-file=/usr/local/percona/pmm2/config/pmm-agent.yaml --server-insecure-tls --server-address=monitoring-service:443 --server-username=admin --server-password=12345679 --force >> /var/log/pmm-agent.log 2>&1
-  pmm-agent run --config-file=/usr/local/percona/pmm2/config/pmm-agent.yaml --server-insecure-tls --server-address=monitoring-service:443 --server-username=admin --server-password=12345679 >> /var/log/pmm-agent.log 2>&1 &
-  sleep 10
+  while true; do
+    consul_pmm_service=`curl -s http://${CONSUL_HTTP_ADDR}/v1/agent/service/pmm.${ENV_CLUSTER_NAMESPACE}.svc.cluster.local`
+    pmm_service=`echo $consul_pmm_service | jq '.Service'`
+    pmm_service_port=`echo $consul_pmm_service | jq '.Port'`
+    if [ $? -eq 0 ]; then
+        pmm-agent setup --config-file=/usr/local/percona/pmm2/config/pmm-agent.yaml --server-insecure-tls --server-address=$pmm_service:$pmm_service_port --server-username=admin --server-password=$ENV_PMM_ADMIN_PASSWORD --force >> /var/log/pmm-agent.log 2>&1
+        pmm-agent run --config-file=/usr/local/percona/pmm2/config/pmm-agent.yaml --server-insecure-tls --server-address=$pmm_service:$pmm_service_port --server-username=admin --server-password=$ENV_PMM_ADMIN_PASSWORD >> /var/log/pmm-agent.log 2>&1 &
+    else
+      echo "Fail to register $pmm_service"
+      sleep 5
+      continue
+    fi
+    break
+  done
 
   pmm-admin status
   if [ $? -eq 0 ]; then
