@@ -1,0 +1,7 @@
+commonLabels:
+  # app: traefik-ingress
+
+resources:
+- 01-mysql-backup-configmap.yaml
+- 02-mysql-backup-services.yaml
+- 03-mysql-backup-statefulset.yaml
