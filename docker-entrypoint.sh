@@ -91,6 +91,21 @@ function pmm_admin_add_mysql() {
   fi
 }
 
+function set_sql_mode() {
+  while true; do
+    netstat -lntup | grep 3306
+    if [ $? -eq 0 ]; then
+      MYSQL_PWD=$MYSQL_ROOT_PASSWORD mysql -uroot -e "SET global sql_mode=(SELECT REPLACE(@@sql_mode, 'ONLY_FULL_GROUP_BY', ''))"
+    else
+      echo "Mysql not running"
+      sleep 10
+      continue
+    fi
+    break
+  done
+}
+
 register_service &
 pmm_admin_add_mysql &
+set_sql_mode &
 /usr/local/bin/docker-entrypoint-inner.sh $@
