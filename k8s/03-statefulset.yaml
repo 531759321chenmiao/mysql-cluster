@@ -16,7 +16,7 @@ spec:
     spec:
       initContainers:
         - name: init-mysql
-          image: uhub.service.ucloud.cn/entropypool/mysql:5.7.35
+          image: uhub.service.ucloud.cn/entropypool/mysql:5.7.35.12
           # image: mysql:5.7.35
           imagePullPolicy: IfNotPresent
           env:
@@ -35,6 +35,11 @@ spec:
                 configMapKeyRef:
                   name: system-environment
                   key: environment.consul_port
+            - name: ENV_PMM_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pmm-secret
+                  key: PMM_ADMIN_PASSWORD
             - name: ENV_CLUSTER_NAMESPACE
               valueFrom:
                 fieldRef:
@@ -94,7 +99,7 @@ spec:
               mountPath: /etc/mysql/conf.d
       containers:
         - name: mysql
-          image: uhub.service.ucloud.cn/entropypool/mysql:5.7.35
+          image: uhub.service.ucloud.cn/entropypool/mysql:5.7.35.12
           # image: mysql:5.7.35
           imagePullPolicy: IfNotPresent
           env:
@@ -113,6 +118,11 @@ spec:
                 configMapKeyRef:
                   name: system-environment
                   key: environment.consul_port
+            - name: ENV_PMM_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pmm-secret
+                  key: PMM_ADMIN_PASSWORD
             - name: ENV_CLUSTER_NAMESPACE
               valueFrom:
                 fieldRef:
