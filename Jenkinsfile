@@ -66,19 +66,6 @@ pipeline {
       }
     }
 
-    stage('Deploy mysql backup cluster') {
-      when {
-        expression { DEPLOY_BACKUP_TARGET == 'true' }
-      }
-      steps {
-        sh (returnStdout: true, script: '''
-          export MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD
-          envsubst < mysql-backup-k8s/mysql-backup-secret.yaml | kubectl apply -f -
-        '''.stripIndent())
-        sh 'kubectl apply -k mysql-backup-k8s'
-      }
-    }
-
     stage('Config apollo') {
       when {
         expression { CONFIG_TARGET == 'true' }
