@@ -25,7 +25,7 @@ pipeline {
             docker rmi $image -f
           done
         '''.stripIndent())
-        sh 'docker build -t $DOCKER_REGISTRY/entropypool/mysql:5.7.35.10 .'
+        sh 'docker build -t $DOCKER_REGISTRY/entropypool/mysql:5.7.35.11 .'
       }
     }
 
@@ -37,7 +37,7 @@ pipeline {
         sh(returnStdout: true, script: '''
           set +e
           while true; do
-            docker push $DOCKER_REGISTRY/entropypool/mysql:5.7.35.10
+            docker push $DOCKER_REGISTRY/entropypool/mysql:5.7.35.11
             if [ $? -eq 0 ]; then
               break
             fi
