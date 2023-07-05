@@ -50,9 +50,9 @@ spec:
                   name: mysql-password-secret
                   key: rootpassword
             - name: CONSUL_REGISTER_ENABLE
-              value: false
+              value: "false"
             - name: PMM_ADMIN_ENABLE
-              value: false
+              value: "false"
             - name: MYSQL_ROOT_HOST
               value: "%"
           command:
