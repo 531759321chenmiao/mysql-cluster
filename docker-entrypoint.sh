@@ -105,7 +105,15 @@ function set_sql_mode() {
   done
 }
 
-register_service &
-pmm_admin_add_mysql &
+if [ "x$CONSUL_REGISTER_ENABLE" == "xfalse" ]; then
+else
+register_service
+fi
+
+if [ "x$PMM_ADMIN_ENABLE" == "xfalse" ]; then
+else
+pmm_admin_add_mysql
+fi
+
 set_sql_mode &
 /usr/local/bin/docker-entrypoint-inner.sh $@
