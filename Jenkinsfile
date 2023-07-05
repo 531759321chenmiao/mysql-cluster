@@ -25,7 +25,7 @@ pipeline {
             docker rmi $image -f
           done
         '''.stripIndent())
-        sh 'docker build -t $DOCKER_REGISTRY/entropypool/mysql:5.7.35.12 .'
+        sh 'docker build -t $DOCKER_REGISTRY/entropypool/mysql:5.7.35.12-web3eye .'
       }
     }
 
@@ -37,7 +37,7 @@ pipeline {
         sh(returnStdout: true, script: '''
           set +e
           while true; do
-            docker push $DOCKER_REGISTRY/entropypool/mysql:5.7.35.12
+            docker push $DOCKER_REGISTRY/entropypool/mysql:5.7.35.12-web3eye
             if [ $? -eq 0 ]; then
               break
             fi
@@ -86,8 +86,8 @@ pipeline {
       steps {
         sh (returnStdout: true, script: '''
             export MYSQL_EXPORTER_PASSWORD=$MYSQL_EXPORTER_PASSWORD
-            PASSWORD=`kubectl get secret --namespace "kube-system" mysql-password-secret -o jsonpath="{.data.rootpassword}" | base64 --decode`
-            envsubst < ./sql/base.sql | kubectl exec -it -n kube-system mysql-0 -- mysql -uroot -p$PASSWORD
+            PASSWORD=`kubectl get secret --namespace "default" mysql-password-secret -o jsonpath="{.data.rootpassword}" | base64 --decode`
+            envsubst < ./sql/base.sql | kubectl exec -it -n default mysql-0 -- mysql -uroot -p$PASSWORD
             kubectl create secret generic mysql-exporter-password-secret --from-literal=password=$MYSQL_EXPORTER_PASSWORD -n monitor || echo "secret already exists"
             '''.stripIndent())
       }

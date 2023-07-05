@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: mysql
-  namespace: kube-system
+  namespace: default
 spec:
   selector:
     matchLabels:
@@ -16,30 +16,14 @@ spec:
     spec:
       initContainers:
         - name: init-mysql
-          image: uhub.service.ucloud.cn/entropypool/mysql:5.7.35.12
+          image: uhub.service.ucloud.cn/entropypool/mysql:5.7.35.12-web3eye
           # image: mysql:5.7.35
           imagePullPolicy: IfNotPresent
           env:
-            - name: ENV_ENVIRONMENT_TARGET
-              valueFrom:
-                configMapKeyRef:
-                  name: system-environment
-                  key: environment.target
-            - name: ENV_CONSUL_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: system-environment
-                  key: environment.consul_host
-            - name: ENV_CONSUL_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: system-environment
-                  key: environment.consul_port
-            - name: ENV_PMM_ADMIN_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: pmm-secret
-                  key: PMM_ADMIN_PASSWORD
+            - name: CONSUL_REGISTER_ENABLE
+              value: false
+            - name: PMM_ADMIN_ENABLE
+              value: false
             - name: ENV_CLUSTER_NAMESPACE
               valueFrom:
                 fieldRef:
@@ -99,30 +83,14 @@ spec:
               mountPath: /etc/mysql/conf.d
       containers:
         - name: mysql
-          image: uhub.service.ucloud.cn/entropypool/mysql:5.7.35.12
+          image: uhub.service.ucloud.cn/entropypool/mysql:5.7.35.12-web3eye
           # image: mysql:5.7.35
           imagePullPolicy: IfNotPresent
           env:
-            - name: ENV_ENVIRONMENT_TARGET
-              valueFrom:
-                configMapKeyRef:
-                  name: system-environment
-                  key: environment.target
-            - name: ENV_CONSUL_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: system-environment
-                  key: environment.consul_host
-            - name: ENV_CONSUL_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: system-environment
-                  key: environment.consul_port
-            - name: ENV_PMM_ADMIN_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: pmm-secret
-                  key: PMM_ADMIN_PASSWORD
+            - name: CONSUL_REGISTER_ENABLE
+              value: false
+            - name: PMM_ADMIN_ENABLE
+              value: false
             - name: ENV_CLUSTER_NAMESPACE
               valueFrom:
                 fieldRef:
