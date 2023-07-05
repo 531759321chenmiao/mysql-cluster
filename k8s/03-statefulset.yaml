@@ -139,9 +139,9 @@ spec:
             - name: MYSQL_ROOT_HOST
               value: "%"
             - name: CONSUL_REGISTER_ENABLE
-              value: false
+              value: "false"
             - name: PMM_ADMIN_ENABLE
-              value: false
+              value: "false"
           ports:
             - name: mysql
               containerPort: 3306
