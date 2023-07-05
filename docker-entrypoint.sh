@@ -106,13 +106,15 @@ function set_sql_mode() {
 }
 
 if [ "x$CONSUL_REGISTER_ENABLE" == "xfalse" ]; then
+  echo "not register to consul"
 else
-register_service
+  register_service
 fi
 
 if [ "x$PMM_ADMIN_ENABLE" == "xfalse" ]; then
+  echo "pmm donot admin"
 else
-pmm_admin_add_mysql
+  pmm_admin_add_mysql
 fi
 
 set_sql_mode &

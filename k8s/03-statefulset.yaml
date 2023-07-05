@@ -49,12 +49,18 @@ spec:
                 secretKeyRef:
                   name: mysql-password-secret
                   key: rootpassword
-            - name: CONSUL_REGISTER_ENABLE
-              value: "false"
-            - name: PMM_ADMIN_ENABLE
-              value: "false"
             - name: MYSQL_ROOT_HOST
               value: "%"
+            - name: CONSUL_REGISTER_ENABLE
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-configmap
+                  key: consul_register_enable
+            - name: PMM_ADMIN_ENABLE
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-configmap
+                  key: pmm_admin_enable
           command:
             - bash
             - "-c"
@@ -139,9 +145,15 @@ spec:
             - name: MYSQL_ROOT_HOST
               value: "%"
             - name: CONSUL_REGISTER_ENABLE
-              value: "false"
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-configmap
+                  key: consul_register_enable
             - name: PMM_ADMIN_ENABLE
-              value: "false"
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-configmap
+                  key: pmm_admin_enable
           ports:
             - name: mysql
               containerPort: 3306
