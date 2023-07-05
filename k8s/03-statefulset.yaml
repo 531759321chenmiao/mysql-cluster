@@ -49,6 +49,10 @@ spec:
                 secretKeyRef:
                   name: mysql-password-secret
                   key: rootpassword
+            - name: CONSUL_REGISTER_ENABLE
+              value: false
+            - name: PMM_ADMIN_ENABLE
+              value: false
             - name: MYSQL_ROOT_HOST
               value: "%"
           command:
@@ -134,6 +138,10 @@ spec:
                   key: rootpassword
             - name: MYSQL_ROOT_HOST
               value: "%"
+            - name: CONSUL_REGISTER_ENABLE
+              value: false
+            - name: PMM_ADMIN_ENABLE
+              value: false
           ports:
             - name: mysql
               containerPort: 3306
