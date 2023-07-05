@@ -29,7 +29,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: mysql-configmap
-  namespace: default
+  namespace: kube-system
   labels:
     app: mysql
 data:
@@ -116,7 +116,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: mysql-configmap
-  namespace: default
+  namespace: kube-system
   labels:
     app: mysql
 data:
