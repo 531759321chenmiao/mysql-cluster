@@ -81,7 +81,7 @@ pipeline {
 
     stage('Execute base sql') {
       when {
-        expression { DEPLOY_TARGET == 'true' }
+        expression { CONFIG_TARGET == 'true' }
       }
       steps {
         sh (returnStdout: true, script: '''
