@@ -92,7 +92,7 @@ spec:
               # Prepare the backup.
               xtrabackup --prepare --target-dir=/var/lib/mysql
           volumeMounts:
-            - name: data
+            - name: mysql-data
               mountPath: /var/lib/mysql
               subPath: mysql
             - name: conf
@@ -138,7 +138,7 @@ spec:
             - name: mysql
               containerPort: 3306
           volumeMounts:
-            - name: data
+            - name: mysql-data
               mountPath: /var/lib/mysql
               subPath: mysql
             - name: conf
@@ -221,7 +221,7 @@ spec:
               exec ncat --listen --keep-open --send-only --max-conns=1 3307 -c \
                 "xtrabackup --backup --slave-info --stream=xbstream --host=127.0.0.1 --user=root --password=$MYSQL_ROOT_PASSWORD"
           volumeMounts:
-            - name: data
+            - name: mysql-data
               mountPath: /var/lib/mysql
               subPath: mysql
             - name: conf
@@ -238,7 +238,7 @@ spec:
             name: mysql-configmap
   volumeClaimTemplates:
     - metadata:
-        name: data
+        name: mysql-data
       spec:
         accessModes: ["ReadWriteOnce"]
         resources:
