@@ -25,7 +25,8 @@ pipeline {
             docker rmi $image -f
           done
         '''.stripIndent())
-        sh 'docker build -t $DOCKER_REGISTRY/entropypool/mysql:5.7.35.14 .'
+
+        sh 'docker build -t $DOCKER_REGISTRY/entropypool/mysql:5.7.35.15 .'
       }
     }
 
@@ -37,7 +38,7 @@ pipeline {
         sh(returnStdout: true, script: '''
           set +e
           while true; do
-            docker push $DOCKER_REGISTRY/entropypool/mysql:5.7.35.14
+            docker push $DOCKER_REGISTRY/entropypool/mysql:5.7.35.15
             if [ $? -eq 0 ]; then
               break
             fi
@@ -59,6 +60,12 @@ pipeline {
       }
       steps {
         sh (returnStdout: true, script: '''
+          if [ "$CONSUL_REGISTER_ENABLE" == "false" ]; then
+            sed -i 's/consul_register_enable: "true"/consul_register_enable: "false"/g' ./k8s/01-configmap.yaml
+          fi
+          if [ "$PMM_ADMIN_ENABLE" == "false" ]; then
+            sed -i 's/pmm_admin_enable: "true"/pmm_admin_enable: "false"/g' ./k8s/01-configmap.yaml          
+          fi
           export MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD
           envsubst < k8s/secret.yaml | kubectl apply -f -
         '''.stripIndent())
