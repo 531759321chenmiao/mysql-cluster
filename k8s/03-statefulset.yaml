@@ -16,7 +16,7 @@ spec:
     spec:
       initContainers:
         - name: init-mysql
-          image: uhub.service.ucloud.cn/entropypool/mysql:5.7.35.14
+          image: uhub.service.ucloud.cn/entropypool/mysql:5.7.35.15
           # image: mysql:5.7.35
           imagePullPolicy: IfNotPresent
           env:
@@ -109,7 +109,7 @@ spec:
               mountPath: /etc/mysql/conf.d
       containers:
         - name: mysql
-          image: uhub.service.ucloud.cn/entropypool/mysql:5.7.35.14
+          image: uhub.service.ucloud.cn/entropypool/mysql:5.7.35.15
           # image: mysql:5.7.35
           imagePullPolicy: IfNotPresent
           env:

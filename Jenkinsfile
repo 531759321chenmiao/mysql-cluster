@@ -26,7 +26,7 @@ pipeline {
           done
         '''.stripIndent())
 
-        sh 'docker build -t $DOCKER_REGISTRY/entropypool/mysql:5.7.35.14 .'
+        sh 'docker build -t $DOCKER_REGISTRY/entropypool/mysql:5.7.35.15 .'
       }
     }
 
@@ -38,7 +38,7 @@ pipeline {
         sh(returnStdout: true, script: '''
           set +e
           while true; do
-            docker push $DOCKER_REGISTRY/entropypool/mysql:5.7.35.14
+            docker push $DOCKER_REGISTRY/entropypool/mysql:5.7.35.15
             if [ $? -eq 0 ]; then
               break
             fi
