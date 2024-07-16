@@ -6,8 +6,6 @@ metadata:
   labels:
     app: mysql
 data:
-  consul_register_enable: "true"
-  pmm_admin_enable: "true"
   my.cnf: |
     [client]
     default-character-set=utf8mb4

@@ -51,16 +51,6 @@ spec:
                   key: rootpassword
             - name: MYSQL_ROOT_HOST
               value: "%"
-            - name: CONSUL_REGISTER_ENABLE
-              valueFrom:
-                configMapKeyRef:
-                  name: mysql-configmap
-                  key: consul_register_enable
-            - name: PMM_ADMIN_ENABLE
-              valueFrom:
-                configMapKeyRef:
-                  name: mysql-configmap
-                  key: pmm_admin_enable
           command:
             - bash
             - "-c"
@@ -144,16 +134,6 @@ spec:
                   key: rootpassword
             - name: MYSQL_ROOT_HOST
               value: "%"
-            - name: CONSUL_REGISTER_ENABLE
-              valueFrom:
-                configMapKeyRef:
-                  name: mysql-configmap
-                  key: consul_register_enable
-            - name: PMM_ADMIN_ENABLE
-              valueFrom:
-                configMapKeyRef:
-                  name: mysql-configmap
-                  key: pmm_admin_enable
           ports:
             - name: mysql
               containerPort: 3306
