@@ -5,7 +5,7 @@ RUN mv /usr/local/bin/docker-entrypoint.sh /usr/local/bin/docker-entrypoint-inne
 
 # RUN gpg --keyserver keyserver.ubuntu.com --recv-keys 467B942D3A79BD29
 # RUN gpg --export --armor 467B942D3A79BD29 | apt-key add -
-RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 467B942D3A79BD29
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys B7B3B788A8D3785C
 RUN apt-get update -y
 RUN apt-get install debian-archive-keyring -y
 RUN apt-get update -y
