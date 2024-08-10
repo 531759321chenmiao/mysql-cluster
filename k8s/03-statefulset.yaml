@@ -16,7 +16,7 @@ spec:
     spec:
       initContainers:
         - name: init-mysql
-          image: uhub.service.ucloud.cn/entropypool/mysql:5.7.35.16
+          image: uhub.service.ucloud.cn/entropypool/mysql:5.7.35.17
           # image: mysql:5.7.35
           imagePullPolicy: IfNotPresent
           env:
@@ -74,8 +74,8 @@ spec:
             - name: config-map
               mountPath: /mnt/config-map
         - name: clone-mysql
-          # image: gcr.io/google-samples/xtrabackup:1.0
-          image: ist0ne/xtrabackup:1.0
+          # image: ist0ne/xtrabackup:1.0
+          image: uhub.service.ucloud.cn/entropypool_public/xtrabackup:1.0
           command:
             - bash
             - "-c"
@@ -99,7 +99,7 @@ spec:
               mountPath: /etc/mysql/conf.d
       containers:
         - name: mysql
-          image: uhub.service.ucloud.cn/entropypool/mysql:5.7.35.16
+          image: uhub.service.ucloud.cn/entropypool/mysql:5.7.35.17
           # image: mysql:5.7.35
           imagePullPolicy: IfNotPresent
           env:
@@ -167,8 +167,8 @@ spec:
             periodSeconds: 2
             timeoutSeconds: 1
         - name: xtrabackup
-          # image: gcr.io/google-samples/xtrabackup:1.0
-          image: ist0ne/xtrabackup:1.0
+          # image: ist0ne/xtrabackup:1.0
+          image: uhub.service.ucloud.cn/entropypool_public/xtrabackup:1.0
           ports:
             - name: xtrabackup
               containerPort: 3307
