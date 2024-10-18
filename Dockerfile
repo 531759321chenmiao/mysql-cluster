@@ -1,4 +1,4 @@
-FROM mysql:5.7.35
+FROM uhub.service.ucloud.cn/entropypool_public/mysql:5.7.35
 
 RUN mkdir -p /usr/local/bin
 RUN mv /usr/local/bin/docker-entrypoint.sh /usr/local/bin/docker-entrypoint-inner.sh
